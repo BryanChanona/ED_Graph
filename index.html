@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma/bulma.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+</head>
+
+<body>
+    <header>
+        <h1>
+            Rutas de Ocozocoautla
+        </h1>
+    </header>
+    <main>
+        <div class="main__form">
+            <div class="main__form--inputAdd">
+                <h2>Add Location</h2>
+                <input type="text" placeholder="Location" id="nameLocation">
+                <button id="addLocation" type="button">Add Location</button>
+            </div>
+            <div class="main--form--inputAddDistance">
+                <h2>Add route</h2>
+                <input type="text" placeholder="Start" id="startLocation">
+                <input type="text" placeholder="End" id="endLocation">
+                <input type="text" placeholder="Distance (cuadras)" id="cuadrasDistance">
+                <button id="addRoute" type="button">Add route</button>
+            </div>
+            <div class="main__form--dijkstra">
+                <h2>Camino mas corto</h2>
+                <input type="text" placeholder="Ubicación inicial" id="inicioLocation">
+                <input type="text" placeholder="Ubicación de destino" id="destinoLocation">
+                <button type="button" id="rutaCorta">Camino recomendado (menos longitud)</button>
+            </div>
+
+    
+        </div>
+        <div class="main__right">
+            <div class="main__form--print">
+                <h2>Print</h2>
+                <button id="profundidadButton" type="button">Recorrido por profundidad</button>
+               
+                <button id="anchuraButton" type="button">Recorrido por anchura</button>
+            </div>
+            <div class="main__showGraph">
+                <div id="mostrarRecorridos" class="main__showGraph--mostrarRecorridos"></div>
+                <div id="mostrarRecorridosAn" class="main__showGraph--mostrarRecorridosAn"></div>
+                <div id="mostrarCaminoCorto" class="main__showGraph--mostrarCaminoCorto"></div>
+                
+            </div>
+        </div>
+    </main>
+   
+    <script type="module" src="src/controllers/script.mjs"></script>
+</body>
+
+</html>

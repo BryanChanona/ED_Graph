@@ -1,0 +1,102 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+}
+header {
+    display: flex;
+    justify-content: center;
+    background-color: rgba(100, 222, 207, 0.3);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    height: 100vh;
+    background-image: url(img/rutas.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding: 20px; 
+    gap: 60px;
+}
+.main__form {
+    display: flex;
+    flex-direction: column;
+    border-radius: 20px;
+    background-color: rgba(44, 129, 119, 0.485);
+    width: 400px;
+    height: 600px;
+    padding: 20px;
+}
+.main__form--inputAdd, .main--form--inputAddDistance {
+    margin-left: 70px;
+    margin-top: 100px;
+}
+.main--form--inputAddDistance {
+    margin-top: 150px;
+}
+.main__form--dijkstra{
+    margin-top: 40px;
+    margin-left: 70px;
+}
+.main__right {
+    margin-top: 30px;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 50px;
+}
+.main__form--print {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center; 
+    border-radius: 20px;
+    background-color: rgba(44, 129, 119, 0.485);
+    width: 400px;
+    height: 400px;
+    padding: 20px;
+}
+.main__showGraph {
+    border-radius: 20px;
+    background-color: rgba(44, 129, 119, 0.485);
+    width: 700px;
+    height: 450px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px; 
+}
+
+.main__showGraph--mostrarRecorridos, .main__showGraph--mostrarRecorridosAn, .main__showGraph--mostrarCaminoCorto {
+    background-color: rgba(255, 255, 255, 0.7); 
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    width: 80%;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.btn {
+    background-color: #3498db;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 12px;
+    transition-duration: 0.4s;
+}
+.btn:hover {
+    background-color: #2980b9;
+    color: white;
+}
