@@ -11,22 +11,33 @@ const printRecorridoAn = document.getElementById("mostrarRecorridosAn");
 const caminoCortoButton = document.getElementById("rutaCorta");
 const printRouteCorta = document.getElementById("mostrarCaminoCorto");
 
-// Add Location Event Listener
+
 addLocation.addEventListener("click", () => {
     const location = document.getElementById("nameLocation").value;
+    if (location === '') {
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Rellene los campos correctamente",
+        });
+        document.getElementById("nameLocation").value = ''; 
+        return;
+    }
     
     if (graph.addVertex(location)) {
         Swal.fire("Se registró correctamente", location, "success");
+        document.getElementById("nameLocation").value = ''; 
     } else {
         Swal.fire({
             icon: "error",
             title: "Oops...",
             text: "No se logró registrar",
         });
+        document.getElementById("nameLocation").value = '';
     }
 });
 
-// Add Route Event Listener
+
 addRuta.addEventListener("click", () => {
     const inicioLocation = document.getElementById("startLocation").value;
     const finalLocation = document.getElementById("endLocation").value;
@@ -34,16 +45,22 @@ addRuta.addEventListener("click", () => {
     
     if (graph.addEdge(inicioLocation, finalLocation, distance)) {
         Swal.fire("Ruta agregada");
+        document.getElementById("startLocation").value = ''; 
+        document.getElementById("endLocation").value = '';   
+        document.getElementById("cuadrasDistance").value = ''; 
     } else {
         Swal.fire({
             icon: "error",
             title: "Oops...",
-            text: "No se pudo agregar la ruta",
+            text: "No se pudo agregar la ruta, rellene los campos correctamente",
         });
+        document.getElementById("startLocation").value = ''; 
+        document.getElementById("endLocation").value = '';   
+        document.getElementById("cuadrasDistance").value = ''; 
     }
 });
 
-// Depth-First Search (DFS) Event Listener
+
 recorridoProfundidad.addEventListener("click", () => {
     printRecorrido.innerHTML = '';
     
@@ -52,7 +69,7 @@ recorridoProfundidad.addEventListener("click", () => {
         graph.dfs(vertices, (vertex) => {
             printRecorrido.innerHTML += `${vertex} `;
         });
-        Swal.fire("Ahora puede ver las terminales");
+        Swal.fire("Los locales/lugares son: ");
     } else {
         Swal.fire({
             icon: "error",
@@ -62,7 +79,6 @@ recorridoProfundidad.addEventListener("click", () => {
     }
 });
 
-// Breadth-First Search (BFS) Event Listener
 recorridoAnchura.addEventListener("click", () => {
     printRecorridoAn.innerHTML = '';
     
@@ -71,7 +87,7 @@ recorridoAnchura.addEventListener("click", () => {
         graph.bfs(vertices, (vertex) => {
             printRecorridoAn.innerHTML += `${vertex} `;
         });
-        Swal.fire("Ahora puede ver las terminales");
+        Swal.fire("Los locales/lugares son: ");
     } else {
         Swal.fire({
             icon: "error",
@@ -92,6 +108,8 @@ caminoCortoButton.addEventListener("click", () => {
             title: "Oops...",
             text: "Debes ingresar nodos válidos para calcular el camino más corto.",
         });
+        document.getElementById("inicioLocation").value = ''; 
+        document.getElementById("destinoLocation").value = ''; 
         return;
     }
 
@@ -110,4 +128,7 @@ caminoCortoButton.addEventListener("click", () => {
             text: "Ya puede ver la ruta más corta",
         });
     }
+
+    document.getElementById("inicioLocation").value = '';
+    document.getElementById("destinoLocation").value = '';
 });
