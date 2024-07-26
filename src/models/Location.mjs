@@ -7,7 +7,5 @@ class Location{
         this.distance = distance;
 
     }
-
-
 }
 export default Location;

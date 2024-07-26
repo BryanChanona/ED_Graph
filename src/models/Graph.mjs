@@ -38,18 +38,21 @@ dfs(startVertex, callback) {
     }
 
     const visited = {};
-    const stack = [];
-    stack.push(startVertex);
+    const stack = [startVertex];
 
     while (stack.length > 0) {
         const currentVertex = stack.pop();
         if (!visited[currentVertex]) {
             callback(currentVertex);
             visited[currentVertex] = true;
+
+            // Acceder a los vecinos
             const neighborsLinkedList = this.#matrizAdyacencia[this.#map.get(currentVertex)];
-            let current = neighborsLinkedList.head;
-            while (current) {
-                const neighborVertex = current.value.node;
+            let current = neighborsLinkedList.getHead();
+
+            // Añadir vecinos al stack
+            while (current !== null) {
+                const neighborVertex = current.value.node; // Aquí se accede a `node`
                 if (!visited[neighborVertex]) {
                     stack.push(neighborVertex);
                 }
@@ -66,18 +69,19 @@ bfs(startVertex, callback) {
     }
 
     const visited = {};
-    const queue = [];
-    queue.push(startVertex);
+    const queue = [startVertex];
 
     while (queue.length > 0) {
         const currentVertex = queue.shift();
         if (!visited[currentVertex]) {
             callback(currentVertex);
             visited[currentVertex] = true;
+
             const neighborsLinkedList = this.#matrizAdyacencia[this.#map.get(currentVertex)];
-            let current = neighborsLinkedList.head;
+            let current = neighborsLinkedList.getHead();
+
             while (current !== null) {
-                const neighborVertex = current.value.node;
+                const neighborVertex = current.value.node; // Aquí se accede a `node`
                 if (!visited[neighborVertex]) {
                     queue.push(neighborVertex);
                 }
@@ -87,51 +91,65 @@ bfs(startVertex, callback) {
     }
 }
 
+
 dijkstra(startVertex, endVertex) {
+    const inf = 1000000;
+    const numVertices = this.numVertices();
+    let D = [];
+    let L_p = [];
+    let L = [];
+    let V = [];
 
-    const inf = Number.MAX_SAFE_INTEGER;
-    const distances = new Array(this.numVertices()).fill(inf);
-    const visited = new Array(this.numVertices()).fill(false);
-    const startIndex = this.#map.get(startVertex);
-    const endIndex = this.#map.get(endVertex);
-    distances[startIndex] = 0;
 
-    while (true) {
-        let u = -1;
-        let minDistance = inf;
+        for (let i = 0; i < numVertices; i++) {
+        D.push(inf);
+        L_p.push(i);
+        V.push(i);
+    }
 
-    
-        for (let i = 0; i < this.numVertices(); i++) {
-            if (!visited[i] && distances[i] < minDistance) {
-                minDistance = distances[i];
-                u = i;
+    const start = this.#map.get(startVertex);
+    const end = this.#map.get(endVertex);
+
+    D[start] = 0;
+
+
+
+        while (L.length < V.length) {
+
+            let minDistance = inf;
+            let minIndex = -1;
+
+                for (let i = 0; i < L_p.length; i++) {
+                    const vertex = L_p[i];
+                 if (minIndex === -1 || D[vertex] < minDistance) {
+                    minDistance = D[vertex];
+                 minIndex = i;
             }
-        } 
-        if (u === -1) {
-            break;
         }
 
-        visited[u] = true;
+        const u = L_p[minIndex];
+        L.push(u);
 
-    
-        const neighbors = this.#matrizAdyacencia[u];
-        let current = neighbors.head;
 
-        while (current) {
-            const neighborIndex = this.#map.get(current.value.node);
-            const weight = current.value.weight;
+        L_p[minIndex] = L_p[L_p.length - 1];
+        L_p.pop();
 
-            if (distances[u] + weight < distances[neighborIndex]) {
-                distances[neighborIndex] = distances[u] + weight;
+        const neighborsLinkedList = this.#matrizAdyacencia[u];
+        let current = neighborsLinkedList.getHead();
+
+            while (current) {
+                const neighbor = this.#map.get(current.value.node);
+                const weight = current.value.weight;
+
+                if (L_p.includes(neighbor) && D[u] + weight < D[neighbor]) {
+                 D[neighbor] = D[u] + weight;
             }
-            current = current.next;
+             current = current.next;
         }
     }
 
-    return distances[endIndex];
+    return D[end];
 }
-
-
 
 
     getVertices() {

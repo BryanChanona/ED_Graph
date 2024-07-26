@@ -62,73 +62,59 @@ addRuta.addEventListener("click", () => {
 
 
 recorridoProfundidad.addEventListener("click", () => {
-    printRecorrido.innerHTML = '';
+    printRecorrido.innerHTML='';
+    const vertices=[...graph.getVertices()][0]
+    graph.dfs(vertices,(vertex) => {
+        printRecorrido.innerHTML += `${vertex} `
+        console.log(vertex)
+
+    });
+    Swal.fire("Ahora puede ver las terminales");
+
+
+
+
+});
+document.addEventListener('DOMContentLoaded',()=> {
+    recorridoAnchura.addEventListener("click", () => {
+
+
+        printRecorridoAn.innerHTML='';
+        
+        const vertices=[...graph.getVertices()][0]
+        graph.bfs(vertices,(vertex) => {
+            printRecorridoAn.innerHTML += `${vertex} `
+            console.log(vertex)
     
-    const vertices = [...graph.getVertices()][0];
-    if (vertices) {
-        graph.dfs(vertices, (vertex) => {
-            printRecorrido.innerHTML += `${vertex} `;
         });
-        Swal.fire("Los locales/lugares son: ");
-    } else {
-        Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: "No hay vértices disponibles",
-        });
-    }
+        Swal.fire("Ahora puede ver las terminales");
+    
+    
+    });
+
+
 });
 
-recorridoAnchura.addEventListener("click", () => {
-    printRecorridoAn.innerHTML = '';
-    
-    const vertices = [...graph.getVertices()][0];
-    if (vertices) {
-        graph.bfs(vertices, (vertex) => {
-            printRecorridoAn.innerHTML += `${vertex} `;
-        });
-        Swal.fire("Los locales/lugares son: ");
-    } else {
-        Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: "No hay vértices disponibles",
-        });
-    }
-});
 
-
-caminoCortoButton.addEventListener("click", () => {
-    let origen = document.getElementById("inicioLocation").value.trim();
+caminoCortoButton.addEventListener("click", ()  => {
+   
+    let origen =document.getElementById("inicioLocation").value.trim();
     let destino = document.getElementById("destinoLocation").value.trim();
 
-    if (origen === '' || destino === '') {
-        Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: "Debes ingresar nodos válidos para calcular el camino más corto.",
-        });
-        document.getElementById("inicioLocation").value = ''; 
-        document.getElementById("destinoLocation").value = ''; 
-        return;
-    }
+    const shortestDistance = graph.dijkstra(origen, destino);
 
-    const distance = graph.dijkstra(origen, destino);
-
-    if (distance === 1000000) {
+    if (shortestDistance === 1000000) {
         Swal.fire({
             icon: "error",
             title: "Oops...",
             text: "No se encontro ningun camino",
         });
     } else {
-        printRouteCorta.innerHTML = `La ruta más corta es ${distance}`;
+        printRouteCorta.innerHTML = ` La ruta mas corta es ${shortestDistance} ` ;
         Swal.fire({
             icon: "info",
-            text: "Ya puede ver la ruta más corta",
-        });
+            text: "Ya puede ver la ruta mas corta"
+            
+        })
     }
-
-    document.getElementById("inicioLocation").value = '';
-    document.getElementById("destinoLocation").value = '';
 });
