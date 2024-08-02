@@ -24,7 +24,7 @@ addLocation.addEventListener("click", () => {
         return;
     }
     
-    if (graph.addVertex(location)) {
+    if (graph.addV(location)) {
         Swal.fire("Se registró correctamente", location, "success");
         document.getElementById("nameLocation").value = ''; 
     } else {
@@ -96,25 +96,22 @@ document.addEventListener('DOMContentLoaded',()=> {
 });
 
 
-caminoCortoButton.addEventListener("click", ()  => {
-   
-    let origen =document.getElementById("inicioLocation").value.trim();
-    let destino = document.getElementById("destinoLocation").value.trim();
-
-    const shortestDistance = graph.dijkstra(origen, destino);
-
-    if (shortestDistance === 1000000) {
-        Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: "No se encontro ningun camino",
-        });
-    } else {
-        printRouteCorta.innerHTML = ` La ruta mas corta es ${shortestDistance} ` ;
-        Swal.fire({
-            icon: "info",
-            text: "Ya puede ver la ruta mas corta"
-            
-        })
-    }
-});
+let imprimirMensaje = (d) =>{
+  
+    d.forEach(valor => {
+      let elementP = document.createElement('p')
+      elementP.textContent = valor;
+      console.log(elementP)
+      printRouteCorta.appendChild(elementP);
+  }); 
+  }
+  
+  caminoCortoButton.addEventListener('click',()=>{
+    let verticePartida = document.getElementById('inicioLocation').value;
+    graph.dijkstra(verticePartida,imprimirMensaje);
+    Swal.fire({
+        icon: "info",
+        text: "Ya puede ver la ruta mas corta"
+        
+    })
+  });

@@ -1,36 +1,37 @@
 import LinkedList from "./LinkedList.mjs";
 
 export default class Graph {
+    #listaAdyacencia = [];
     #matrizAdyacencia = [];
     #map = new Map();
-
+  
     constructor() {}
-
+  
     addVertices(...vertices) {
         for (let value of vertices) {
-            if (!this.#map.has(value)) {
-                this.#matrizAdyacencia.push(new LinkedList());
-                this.#map.set(value, this.#matrizAdyacencia.length - 1);
-            }
+            this.#listaAdyacencia.push(new LinkedList())
+            this.#map.set(value,this.#listaAdyacencia.length-1)
         }
     }
-
-    addVertex(vertex) {
-        if (!this.#map.has(vertex)) {
-            this.#matrizAdyacencia.push(new LinkedList());
-            this.#map.set(vertex, this.#matrizAdyacencia.length - 1);
-            return true;
+  
+    addV(value) {
+        this.#listaAdyacencia.push(new LinkedList())
+        this.#map.set(value,this.#listaAdyacencia.length-1)
+        this.#matrizAdyacencia.push([])
+        return value
+    }
+  
+    addEdge(start, end, weight=1){
+        if (this.#map.has(start) && this.#map.has(end)) {
+            this.#listaAdyacencia[this.#map.get(start)].push(end,weight)
+            this.#listaAdyacencia[this.#map.get(end)].push(start,weight)
+            this.#matrizAdyacencia[this.#map.get(start)][this.#map.get(end)] = weight
+            this.#matrizAdyacencia[this.#map.get(end)][this.#map.get(start)] = weight
+            return true
         }
         return false;
     }
-
-    addEdge(node1, node2, weight = 1) {
-        if (this.#map.has(node1) && this.#map.has(node2)) {
-            this.#matrizAdyacencia[this.#map.get(node1)].push(node2, weight);
-            return true;
-        }
-        return false;
-    }
+    
 //profundiad
 dfs(startVertex, callback) {
     if (!this.#map.has(startVertex)) {
@@ -47,7 +48,7 @@ dfs(startVertex, callback) {
             visited[currentVertex] = true;
 
             // Acceder a los vecinos
-            const neighborsLinkedList = this.#matrizAdyacencia[this.#map.get(currentVertex)];
+            const neighborsLinkedList = this.#listaAdyacencia[this.#map.get(currentVertex)];
             let current = neighborsLinkedList.getHead();
 
             // Añadir vecinos al stack
@@ -77,7 +78,7 @@ bfs(startVertex, callback) {
             callback(currentVertex);
             visited[currentVertex] = true;
 
-            const neighborsLinkedList = this.#matrizAdyacencia[this.#map.get(currentVertex)];
+            const neighborsLinkedList = this.#listaAdyacencia[this.#map.get(currentVertex)];
             let current = neighborsLinkedList.getHead();
 
             while (current !== null) {
@@ -92,64 +93,52 @@ bfs(startVertex, callback) {
 }
 
 
-dijkstra(startVertex, endVertex) {
-    const inf = 1000000;
-    const numVertices = this.numVertices();
-    let D = [];
-    let L_p = [];
-    let L = [];
-    let V = [];
+dijkstra(verticeInit, imprimirMensaje) {
+    // Valores iniciales
+    let l = [];
+    let v = [];
+    let d = [];
+    let dp = [];
+    let v1;
 
-
-        for (let i = 0; i < numVertices; i++) {
-        D.push(inf);
-        L_p.push(i);
-        V.push(i);
+    for (let i = 0; i < this.#matrizAdyacencia.length; i++) {
+        for (let j = 0; j < this.#matrizAdyacencia.length; j++) {
+            if (this.#matrizAdyacencia[i][j] === undefined) {
+                this.#matrizAdyacencia[i][j] = 10000;
+            }
+        }            
+    }
+    
+    for (let i = 0; i < this.#matrizAdyacencia.length; i++) {
+        v[i] = i;
+        d[i] = 10000;
     }
 
-    const start = this.#map.get(startVertex);
-    const end = this.#map.get(endVertex);
+    v1 = this.#map.get(verticeInit);
+    d[v1] = 0;
+    dp = [...d];
 
-    D[start] = 0;
+    while (l.length !== this.#matrizAdyacencia.length) {
+        let minimo = Math.min(...dp.filter(value => value !== null));
+        let indice = dp.indexOf(minimo);
+        l.push(minimo);
 
-
-
-        while (L.length < V.length) {
-
-            let minDistance = inf;
-            let minIndex = -1;
-
-                for (let i = 0; i < L_p.length; i++) {
-                    const vertex = L_p[i];
-                 if (minIndex === -1 || D[vertex] < minDistance) {
-                    minDistance = D[vertex];
-                 minIndex = i;
+        for (let i = 0; i < d.length; i++) {
+            if (this.#matrizAdyacencia[indice][i] !== 10000) { 
+                let suma = d[indice] + this.#matrizAdyacencia[indice][i];
+                if (d[i] > suma) {
+                    d[i] = suma;
+                }
             }
         }
 
-        const u = L_p[minIndex];
-        L.push(u);
-
-
-        L_p[minIndex] = L_p[L_p.length - 1];
-        L_p.pop();
-
-        const neighborsLinkedList = this.#matrizAdyacencia[u];
-        let current = neighborsLinkedList.getHead();
-
-            while (current) {
-                const neighbor = this.#map.get(current.value.node);
-                const weight = current.value.weight;
-
-                if (L_p.includes(neighbor) && D[u] + weight < D[neighbor]) {
-                 D[neighbor] = D[u] + weight;
-            }
-             current = current.next;
-        }
+        dp[indice] = null;
     }
 
-    return D[end];
+    imprimirMensaje(d)
 }
+
+
 
 
     getVertices() {
@@ -168,3 +157,21 @@ dijkstra(startVertex, endVertex) {
         return this.#map.size;
     }
 }
+/* Agregar vértices
+graph.addVertex("A");
+graph.addVertex("B");
+graph.addVertex("C");
+
+// Agregar aristas
+graph.addEdge("A", "B", 1);
+graph.addEdge("B", "C", 1); 
+DFS:
+A
+B
+C
+BFS:
+A
+B
+C
+La distancia más corta de A a C es: 2
+*/
